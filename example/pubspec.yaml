@@ -11,6 +11,7 @@ environment:
 dependencies:
   usecase:
     path: "../"
+  sealed_result: ^3.0.0
 
 dev_dependencies:
   lints: ^2.1.1

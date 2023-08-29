@@ -1,8 +1,5 @@
-import 'package:example/example.dart';
-import 'package:test/test.dart';
-
-void main() {
-  test('calculate', () {
-    expect(calculate(), 42);
-  });
-}
+// Copyright 2023 Hugo Pointcheval
+// 
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file or at
+// https://opensource.org/licenses/MIT.
