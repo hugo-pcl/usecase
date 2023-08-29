@@ -1,5 +1,5 @@
 <p align="center">
-<img width="700px" src="./resources/usecase_lib.png" style="background-color: rgb(255, 255, 255)">
+<img width="700px" src="https://raw.githubusercontent.com/hugo-pcl/usecase/main/resources/usecase_lib.png" style="background-color: rgb(255, 255, 255)">
 <h5 align="center">Small component that encapsulates an application's scenario logic.</h5>
 </p>
 
@@ -10,8 +10,8 @@
 <img src="https://img.shields.io/badge/Maintained%20with-melos-f700ff.svg" alt="Maintained with Melos" />
 </a>
 
-<a href="https://pub.dev/packages/usecase">
-<img src="https://img.shields.io/pub/v/usecase" alt="Pub.dev" />
+<a href="https://pub.dev/packages/generic_usecase">
+<img src="https://img.shields.io/pub/v/generic_usecase" alt="Pub.dev" />
 </a>
 
 <a href="https://drone.wyatt-studio.fr/hugo/usecase">
