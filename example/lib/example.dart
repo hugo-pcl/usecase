@@ -4,16 +4,40 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'dart:async';
+
 import 'package:example/failure.dart';
 import 'package:sealed_result/sealed_result.dart';
 import 'package:usecase/usecase.dart';
 
-class AdditionUsecase extends Usecase<int, String> {
+class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<String> execute(int params) async {
-    return '$params * 2 = ${params * 2}';
+  Future<int> execute(int params) async {
+    return params + params;
+  }
+}
+
+class DivisionUsecase extends Usecase<(int, int), double> {
+  const DivisionUsecase();
+
+  @override
+  FutureOr<PreconditionsResult> checkPrecondition((int, int)? params) {
+    if (params == null) {
+      return PreconditionsResult(isValid: false, message: 'Params is null');
+    }
+
+    if (params.$2 == 0) {
+      return PreconditionsResult(isValid: false, message: 'Cannot divide by 0');
+    }
+
+    return PreconditionsResult(isValid: true);
+  }
+
+  @override
+  Future<double> execute((int, int) params) async {
+    return params.$1 / params.$2;
   }
 }
 
@@ -28,49 +52,28 @@ class GeneratorUsecase extends NoParamsStreamUsecase<int> {
   }
 }
 
-class DangerousUsecase extends ResultUsecase<int, String, Failure> {
+class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
+  const DivisionResultUsecase();
+
   @override
-  Future<Result<String, Failure>> execute(int params) async {
-    if (params == 0) {
-      return Result.err(Failure('Cannot divide by 0'));
+  FutureOr<PreconditionsResult> checkPrecondition((int, int)? params) {
+    if (params == null) {
+      return PreconditionsResult(isValid: false, message: 'Params is null');
     }
-    return Result.success('${10 / params}');
+
+    if (params.$2 == 0) {
+      return PreconditionsResult(isValid: false, message: 'Cannot divide by 0');
+    }
+
+    return PreconditionsResult(isValid: true);
   }
 
   @override
-  Result<String, Failure> onException(UsecaseException e) =>
+  Future<Result<double, Failure>> execute((int, int) params) async {
+    return Result.success(params.$1 / params.$2);
+  }
+
+  @override
+  Result<double, Failure> onException(UsecaseException e) =>
       Result.failure(Failure(e.message ?? ''));
-}
-
-class ListenerUsecase extends NoParamsResultStreamUsecase<String, Failure> {
-  @override
-  Stream<Result<String, Failure>> execute() async* {
-    for (int i = 0; i < 10; i++) {
-      if (i == 0) {
-        yield Result.err(Failure('Cannot be 0'));
-      } else if (i == 5) {
-        yield Result.err(Failure('Cannot be 5'));
-      } else {
-        yield Result.success('${10 / i}');
-      }
-    }
-  }
-
-  @override
-  Result<String, Failure> onException(UsecaseException e) =>
-      Result.failure(Failure(e.message ?? ''));
-}
-
-class UnsafeGeneratorUsecase extends StreamUsecase<int, int> {
-  const UnsafeGeneratorUsecase();
-
-  @override
-  Stream<int> execute(int params) async* {
-    for (int i = 0; i < params; i++) {
-      if (i == 5) {
-        throw Exception('Cannot be 5');
-      }
-      yield i;
-    }
-  }
 }

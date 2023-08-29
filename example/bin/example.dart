@@ -6,36 +6,51 @@
 
 import 'package:example/example.dart';
 
-void main(List<String> arguments) {
+Future<void> main(List<String> arguments) async {
+  print('AdditionUsecase');
+
   final AdditionUsecase addition = const AdditionUsecase();
 
-  addition(2).then((value) => print(value));
-  addition(null).then((value) => print(value), onError: (e) => print(e));
+  print('> addition(null)');
+  await addition(null).then((value) => print(value), onError: (e) => print(e));
+
+  print('> addition(2)');
+  await addition(2).then((value) => print(value), onError: (e) => print(e));
+
+  print('DivisionUsecase');
+
+  final DivisionUsecase division = const DivisionUsecase();
+
+  print('> division(null)');
+  await division(null).then((value) => print(value), onError: (e) => print(e));
+
+  print('> division((2, 0))');
+  await division((2, 0)).then((value) => print(value), onError: (e) => print(e));
+
+  print('> division((4, 2))');
+  await division((4, 2)).then((value) => print(value), onError: (e) => print(e));
+
+  print('DivisionResultUsecase');
+
+  final DivisionResultUsecase divisionResult = const DivisionResultUsecase();
+
+  print('> divisionResult(null)');
+  await divisionResult(null).then((value) => print(value), onError: (e) => print(e));
+
+  print('> divisionResult((2, 0))');
+  await divisionResult((2, 0))
+      .then((value) => print(value), onError: (e) => print(e));
+
+  print('> divisionResult((4, 2))');
+  await divisionResult((4, 2))
+      .then((value) => print(value), onError: (e) => print(e));
+
+  print('GeneratorUsecase');
 
   final GeneratorUsecase generator = const GeneratorUsecase();
 
+  print('> generator()');
   generator().listen((event) {
-    print(event);
-  });
-
-  final DangerousUsecase dangerous = DangerousUsecase();
-
-  dangerous(null).then((value) => print(value), onError: (e) => print(e));
-  dangerous(0).then((value) => print(value), onError: (e) => print(e));
-  dangerous(2).then((value) => print(value), onError: (e) => print(e));
-
-  final ListenerUsecase listener = ListenerUsecase();
-
-  listener().listen((event) {
-    print(event);
-  });
-
-  final UnsafeGeneratorUsecase unsafeGenerator = UnsafeGeneratorUsecase();
-
-  unsafeGenerator(null).listen((event) {
-    print(event);
-  });
-  unsafeGenerator(3).listen((event) {
     print(event);
   });
 }
