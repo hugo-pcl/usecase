@@ -475,7 +475,6 @@ Dependencies/
 # Java class files
 
 # Generated files
-bin/
 gen/
 
 # Gradle files
