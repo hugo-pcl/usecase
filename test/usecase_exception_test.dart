@@ -4,8 +4,8 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-import 'package:test/test.dart';
 import 'package:generic_usecase/generic_usecase.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('UsecaseException', () {

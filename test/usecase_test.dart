@@ -6,9 +6,9 @@
 
 import 'dart:async';
 
+import 'package:generic_usecase/generic_usecase.dart';
 import 'package:sealed_result/src/result.dart';
 import 'package:test/test.dart';
-import 'package:generic_usecase/generic_usecase.dart';
 
 bool globalPrecondition = true;
 
