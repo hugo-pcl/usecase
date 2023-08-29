@@ -15,6 +15,31 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`usecase` - `v1.2.0`](#usecase---v120)
+
+---
+
+#### `usecase` - `v1.2.0`
+
+ - **FEAT**: add analyzer + dart format.
+
+## 1.2.0
+
+ - **FEAT**: add analyzer + dart format.
+
+
+## 2023-08-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`usecase` - `v1.1.0`](#usecase---v110)
 
 ---
