@@ -11,32 +11,32 @@ void main() {
   group('UsecaseException', () {
     test('should create an exception with a message', () {
       const message = 'Test message';
-      final exception = UsecaseException(message);
+      const exception = UsecaseException(message);
       expect(exception.message, equals(message));
     });
 
     test('should create an exception without a message', () {
-      final exception = UsecaseException();
+      const exception = UsecaseException();
       expect(exception.message, isNull);
     });
 
     test('should have a string representation', () {
       const message = 'Test message';
-      final exception = UsecaseException(message);
+      const exception = UsecaseException(message);
       expect(exception.toString(), equals('UsecaseException: $message'));
     });
 
     test('should be equal to another exception with the same message', () {
       const message = 'Test message';
-      final exception1 = UsecaseException(message);
-      final exception2 = UsecaseException(message);
+      const exception1 = UsecaseException(message);
+      const exception2 = UsecaseException(message);
       expect(exception1, equals(exception2));
     });
 
     test('should not be equal to another exception with a different message',
         () {
-      final exception1 = UsecaseException('Test message 1');
-      final exception2 = UsecaseException('Test message 2');
+      const exception1 = UsecaseException('Test message 1');
+      const exception2 = UsecaseException('Test message 2');
       expect(exception1, isNot(equals(exception2)));
     });
 
@@ -44,8 +44,8 @@ void main() {
         'should have the same hashcode as another exception with the same '
         'message', () {
       const message = 'Test message';
-      final exception1 = UsecaseException(message);
-      final exception2 = UsecaseException(message);
+      const exception1 = UsecaseException(message);
+      const exception2 = UsecaseException(message);
       expect(exception1.hashCode, equals(exception2.hashCode));
     });
   });
@@ -53,32 +53,32 @@ void main() {
   group('StreamUsecaseException', () {
     test('should create an exception with a message', () {
       const message = 'Test message';
-      final exception = StreamUsecaseException(message);
+      const exception = StreamUsecaseException(message);
       expect(exception.message, equals(message));
     });
 
     test('should create an exception without a message', () {
-      final exception = StreamUsecaseException();
+      const exception = StreamUsecaseException();
       expect(exception.message, isNull);
     });
 
     test('should have a string representation', () {
       const message = 'Test message';
-      final exception = StreamUsecaseException(message);
+      const exception = StreamUsecaseException(message);
       expect(exception.toString(), equals('StreamUsecaseException: $message'));
     });
 
     test('should be equal to another exception with the same message', () {
       const message = 'Test message';
-      final exception1 = StreamUsecaseException(message);
-      final exception2 = StreamUsecaseException(message);
+      const exception1 = StreamUsecaseException(message);
+      const exception2 = StreamUsecaseException(message);
       expect(exception1, equals(exception2));
     });
 
     test('should not be equal to another exception with a different message',
         () {
-      final exception1 = StreamUsecaseException('Test message 1');
-      final exception2 = StreamUsecaseException('Test message 2');
+      const exception1 = StreamUsecaseException('Test message 1');
+      const exception2 = StreamUsecaseException('Test message 2');
       expect(exception1, isNot(equals(exception2)));
     });
   });
@@ -86,32 +86,32 @@ void main() {
   group('PreconditionsException', () {
     test('should create an exception with a message', () {
       const message = 'Test message';
-      final exception = PreconditionsException(message);
+      const exception = PreconditionsException(message);
       expect(exception.message, equals(message));
     });
 
     test('should create an exception without a message', () {
-      final exception = PreconditionsException();
+      const exception = PreconditionsException();
       expect(exception.message, isNull);
     });
 
     test('should have a string representation', () {
       const message = 'Test message';
-      final exception = PreconditionsException(message);
+      const exception = PreconditionsException(message);
       expect(exception.toString(), equals('PreconditionsException: $message'));
     });
 
     test('should be equal to another exception with the same message', () {
       const message = 'Test message';
-      final exception1 = PreconditionsException(message);
-      final exception2 = PreconditionsException(message);
+      const exception1 = PreconditionsException(message);
+      const exception2 = PreconditionsException(message);
       expect(exception1, equals(exception2));
     });
 
     test('should not be equal to another exception with a different message',
         () {
-      final exception1 = PreconditionsException('Test message 1');
-      final exception2 = PreconditionsException('Test message 2');
+      const exception1 = PreconditionsException('Test message 1');
+      const exception2 = PreconditionsException('Test message 2');
       expect(exception1, isNot(equals(exception2)));
     });
   });
@@ -119,33 +119,33 @@ void main() {
   group('InvalidPreconditionsException', () {
     test('should create an exception with a message', () {
       const message = 'Test message';
-      final exception = InvalidPreconditionsException(message);
+      const exception = InvalidPreconditionsException(message);
       expect(exception.message, equals(message));
     });
 
     test('should create an exception without a message', () {
-      final exception = InvalidPreconditionsException();
+      const exception = InvalidPreconditionsException();
       expect(exception.message, isNull);
     });
 
     test('should have a string representation', () {
       const message = 'Test message';
-      final exception = InvalidPreconditionsException(message);
+      const exception = InvalidPreconditionsException(message);
       expect(exception.toString(),
-          equals('InvalidPreconditionsException: $message'));
+          equals('InvalidPreconditionsException: $message'),);
     });
 
     test('should be equal to another exception with the same message', () {
       const message = 'Test message';
-      final exception1 = InvalidPreconditionsException(message);
-      final exception2 = InvalidPreconditionsException(message);
+      const exception1 = InvalidPreconditionsException(message);
+      const exception2 = InvalidPreconditionsException(message);
       expect(exception1, equals(exception2));
     });
 
     test('should not be equal to another exception with a different message',
         () {
-      final exception1 = InvalidPreconditionsException('Test message 1');
-      final exception2 = InvalidPreconditionsException('Test message 2');
+      const exception1 = InvalidPreconditionsException('Test message 1');
+      const exception2 = InvalidPreconditionsException('Test message 2');
       expect(exception1, isNot(equals(exception2)));
     });
   });

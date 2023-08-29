@@ -40,24 +40,24 @@ class UsecaseException implements Exception {
 
 /// {@template invalid_preconditions_exception}
 /// [InvalidPreconditionsException] is threw when the preconditions of a
-/// [Usecase] are not met.
+/// Usecase are not met.
 /// {@endtemplate}
 class InvalidPreconditionsException extends UsecaseException {
   /// {@macro invalid_preconditions_exception}
-  const InvalidPreconditionsException([String? message]) : super(message);
-  
+  const InvalidPreconditionsException([super.message]);
+
   @override
   String get prefix => 'InvalidPreconditionsException';
 }
 
 /// {@template preconditions_exception}
 /// [PreconditionsException] is threw when an error occured during the
-/// preconditions check of a [Usecase].
+/// preconditions check of a Usecase.
 /// {@endtemplate}
 class PreconditionsException extends UsecaseException {
   /// {@macro preconditions_exception}
-  const PreconditionsException([String? message]) : super(message);
-  
+  const PreconditionsException([super.message]);
+
   @override
   String get prefix => 'PreconditionsException';
 }
@@ -67,8 +67,8 @@ class PreconditionsException extends UsecaseException {
 /// {@endtemplate}
 class StreamUsecaseException extends UsecaseException {
   /// {@macro stream_usecase_exception}
-  const StreamUsecaseException([String? message]) : super(message);
-  
+  const StreamUsecaseException([super.message]);
+
   @override
   String get prefix => 'StreamUsecaseException';
 }

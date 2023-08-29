@@ -25,17 +25,20 @@ Future<void> main(List<String> arguments) async {
   await division(null).then((value) => print(value), onError: (e) => print(e));
 
   print('> division((2, 0))');
-  await division((2, 0)).then((value) => print(value), onError: (e) => print(e));
+  await division((2, 0))
+      .then((value) => print(value), onError: (e) => print(e));
 
   print('> division((4, 2))');
-  await division((4, 2)).then((value) => print(value), onError: (e) => print(e));
+  await division((4, 2))
+      .then((value) => print(value), onError: (e) => print(e));
 
   print('DivisionResultUsecase');
 
   final DivisionResultUsecase divisionResult = const DivisionResultUsecase();
 
   print('> divisionResult(null)');
-  await divisionResult(null).then((value) => print(value), onError: (e) => print(e));
+  await divisionResult(null)
+      .then((value) => print(value), onError: (e) => print(e));
 
   print('> divisionResult((2, 0))');
   await divisionResult((2, 0))

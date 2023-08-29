@@ -6,7 +6,7 @@
 
 class PreconditionsResult {
   PreconditionsResult(
-      {required this.isValid, this.message = 'Requirements are not met'});
+      {required this.isValid, this.message = 'Requirements are not met',});
 
   final bool isValid;
   final String message;

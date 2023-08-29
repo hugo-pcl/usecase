@@ -16,9 +16,7 @@ class UsecaseTest extends Usecase<int, int> {
   const UsecaseTest();
 
   @override
-  Future<int> execute(int params) async {
-    return params * 2;
-  }
+  Future<int> execute(int params) async => params * 2;
 }
 
 class BrokenPreconditionUsecaseTest extends Usecase<int, int> {
@@ -29,32 +27,25 @@ class BrokenPreconditionUsecaseTest extends Usecase<int, int> {
       throw Exception('Precondition failed');
 
   @override
-  Future<int> execute(int params) async {
-    return params * 2;
-  }
+  Future<int> execute(int params) async => params * 2;
 }
 
 class NoParamsUsecaseTest extends NoParamsUsecase<int> {
   const NoParamsUsecaseTest();
 
   @override
-  FutureOr<PreconditionsResult> checkPrecondition(void params) async {
-    return PreconditionsResult(isValid: globalPrecondition);
-  }
+  FutureOr<PreconditionsResult> checkPrecondition(void params) async =>
+      PreconditionsResult(isValid: globalPrecondition);
 
   @override
-  Future<int> execute() async {
-    return 42;
-  }
+  Future<int> execute() async => 42;
 }
 
 class NoParamsDefaultUsecaseTest extends NoParamsUsecase<int> {
   const NoParamsDefaultUsecaseTest();
 
   @override
-  Future<int> execute() async {
-    return 42;
-  }
+  Future<int> execute() async => 42;
 }
 
 class NoParamsBrokenPreconditionUsecaseTest extends NoParamsUsecase<int> {
@@ -65,23 +56,18 @@ class NoParamsBrokenPreconditionUsecaseTest extends NoParamsUsecase<int> {
       throw Exception('Precondition failed');
 
   @override
-  Future<int> execute() async {
-    return 42;
-  }
+  Future<int> execute() async => 42;
 }
 
 class ResultUsecaseTest extends ResultUsecase<int, int, Exception> {
   const ResultUsecaseTest();
 
   @override
-  Future<Result<int, Exception>> execute(int params) async {
-    return Result.success(params * 2);
-  }
+  Future<Result<int, Exception>> execute(int params) async =>
+      Result.success(params * 2);
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 class BrokenPreconditionResultUsecaseTest
@@ -93,33 +79,25 @@ class BrokenPreconditionResultUsecaseTest
       throw Exception('Precondition failed');
 
   @override
-  Future<Result<int, Exception>> execute(int params) async {
-    return Result.success(params * 2);
-  }
+  Future<Result<int, Exception>> execute(int params) async =>
+      Result.success(params * 2);
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 class NoParamsResultUsecaseTest extends NoParamsResultUsecase<int, Exception> {
   const NoParamsResultUsecaseTest();
 
   @override
-  FutureOr<PreconditionsResult> checkPrecondition(void params) async {
-    return PreconditionsResult(isValid: globalPrecondition);
-  }
+  FutureOr<PreconditionsResult> checkPrecondition(void params) async =>
+      PreconditionsResult(isValid: globalPrecondition);
 
   @override
-  Future<Result<int, Exception>> execute() async {
-    return Result.success(42);
-  }
+  Future<Result<int, Exception>> execute() async => const Result.success(42);
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 class NoParamsBrokenPreconditionResultUsecaseTest
@@ -131,14 +109,10 @@ class NoParamsBrokenPreconditionResultUsecaseTest
       throw Exception('Precondition failed');
 
   @override
-  Future<Result<int, Exception>> execute() async {
-    return Result.success(42);
-  }
+  Future<Result<int, Exception>> execute() async => const Result.success(42);
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 class StreamUsecaseTest extends StreamUsecase<int, int> {
@@ -167,9 +141,8 @@ class NoParamsStreamUsecaseTest extends NoParamsStreamUsecase<int> {
   const NoParamsStreamUsecaseTest();
 
   @override
-  FutureOr<PreconditionsResult> checkPrecondition(void params) async {
-    return PreconditionsResult(isValid: globalPrecondition);
-  }
+  FutureOr<PreconditionsResult> checkPrecondition(void params) async =>
+      PreconditionsResult(isValid: globalPrecondition);
 
   @override
   Stream<int> execute() async* {
@@ -209,9 +182,7 @@ class ResultStreamUsecaseTest extends ResultStreamUsecase<int, int, Exception> {
   }
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 class BrokenPreconditionResultStreamUsecaseTest
@@ -228,9 +199,7 @@ class BrokenPreconditionResultStreamUsecaseTest
   }
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 class NoParamsResultStreamUsecaseTest
@@ -238,19 +207,16 @@ class NoParamsResultStreamUsecaseTest
   const NoParamsResultStreamUsecaseTest();
 
   @override
-  FutureOr<PreconditionsResult> checkPrecondition(void params) async {
-    return PreconditionsResult(isValid: globalPrecondition);
-  }
+  FutureOr<PreconditionsResult> checkPrecondition(void params) async =>
+      PreconditionsResult(isValid: globalPrecondition);
 
   @override
   Stream<Result<int, Exception>> execute() async* {
-    yield Result.success(42);
+    yield const Result.success(42);
   }
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 class NoParamsBrokenPreconditionResultStreamUsecaseTest
@@ -263,13 +229,11 @@ class NoParamsBrokenPreconditionResultStreamUsecaseTest
 
   @override
   Stream<Result<int, Exception>> execute() async* {
-    yield Result.success(42);
+    yield const Result.success(42);
   }
 
   @override
-  Result<int, Exception> onException(UsecaseException e) {
-    return Result.failure(e);
-  }
+  Result<int, Exception> onException(UsecaseException e) => Result.failure(e);
 }
 
 void main() {
@@ -315,8 +279,10 @@ void main() {
     });
 
     test('should throw an exception on broken precondition', () async {
-      expect(() => brokenPreconditionUsecaseTest(2),
-          throwsA(isA<UsecaseException>()));
+      expect(
+        () => brokenPreconditionUsecaseTest(2),
+        throwsA(isA<UsecaseException>()),
+      );
     });
 
     test('with no params should return 42', () async {
@@ -333,8 +299,10 @@ void main() {
 
     test('with no params should throw an exception on broken precondition',
         () async {
-      expect(() => noParamsBrokenPreconditionUsecaseTest(),
-          throwsA(isA<UsecaseException>()));
+      expect(
+        () => noParamsBrokenPreconditionUsecaseTest(),
+        throwsA(isA<UsecaseException>()),
+      );
     });
 
     test('with no params should return 42 with default implementation',
@@ -347,7 +315,7 @@ void main() {
   group('ResultUsecase', () {
     test('should return 4', () async {
       final Result<int, Exception> result = await resultUsecaseTest(2);
-      expect(result, Result<int, Exception>.success(4));
+      expect(result, const Result<int, Exception>.success(4));
     });
 
     test('should return a failure on invalid precondition', () async {
@@ -365,7 +333,7 @@ void main() {
 
     test('with no params should return 42', () async {
       final Result<int, Exception> result = await noParamsResultUsecaseTest();
-      expect(result, Result<int, Exception>.success(42));
+      expect(result, const Result<int, Exception>.success(42));
     });
 
     test('with no params should return a failure on invalid precondition',
@@ -436,7 +404,7 @@ void main() {
     test('should return 4', () async {
       final Result<int, Exception> result =
           await resultStreamUsecaseTest(2).first;
-      expect(result, Result<int, Exception>.success(4));
+      expect(result, const Result<int, Exception>.success(4));
     });
 
     test('should return a failure on invalid precondition', () async {
@@ -462,7 +430,7 @@ void main() {
     test('with no params should return 42', () async {
       final Result<int, Exception> result =
           await noParamsResultStreamUsecaseTest().first;
-      expect(result, Result<int, Exception>.success(42));
+      expect(result, const Result<int, Exception>.success(42));
     });
 
     test('with no params should return a failure on invalid precondition',

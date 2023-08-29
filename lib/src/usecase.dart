@@ -38,7 +38,9 @@ abstract class Usecase<Input, Output> extends _Usecase<Input, Output> {
       return PreconditionsResult(isValid: true);
     } else {
       return PreconditionsResult(
-          isValid: false, message: 'Params cannot be null');
+        isValid: false,
+        message: 'Params cannot be null',
+      );
     }
   }
 
@@ -56,14 +58,16 @@ abstract class Usecase<Input, Output> extends _Usecase<Input, Output> {
       condition = await checkPrecondition(params);
     } catch (e) {
       throw PreconditionsException(
-          'An error occured during the preconditions check: $e');
+        'An error occured during the preconditions check: $e',
+      );
     }
 
     if (condition.isValid) {
       return execute(params as Input);
     } else {
       throw InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}');
+        'Invalid preconditions: ${condition.message}',
+      );
     }
   }
 }
@@ -82,9 +86,8 @@ abstract class NoParamsUsecase<Output> extends _Usecase<void, Output> {
   ///
   /// Override this method to change the behavior.
   @override
-  FutureOr<PreconditionsResult> checkPrecondition(void params) {
-    return Future.value(PreconditionsResult(isValid: true));
-  }
+  FutureOr<PreconditionsResult> checkPrecondition(void params) =>
+      Future.value(PreconditionsResult(isValid: true));
 
   /// Execute the usecase with the given params
   ///
@@ -100,14 +103,16 @@ abstract class NoParamsUsecase<Output> extends _Usecase<void, Output> {
       condition = await checkPrecondition(null);
     } catch (e) {
       throw PreconditionsException(
-          'An error occured during the preconditions check: $e');
+        'An error occured during the preconditions check: $e',
+      );
     }
 
     if (condition.isValid) {
       return execute();
     } else {
       throw InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}');
+        'Invalid preconditions: ${condition.message}',
+      );
     }
   }
 }
@@ -123,21 +128,28 @@ abstract class ResultUsecase<Input, Output, Failure>
   const ResultUsecase() : super();
 
   /// Call the usecase with the given params
+  @override
   Future<Result<Output, Failure>> call(Input? params) async {
     PreconditionsResult condition;
 
     try {
       condition = await checkPrecondition(params);
     } catch (e) {
-      return onException(PreconditionsException(
-          'An error occured during the preconditions check: $e'));
+      return onException(
+        PreconditionsException(
+          'An error occured during the preconditions check: $e',
+        ),
+      );
     }
 
     if (condition.isValid) {
       return execute(params as Input);
     } else {
-      return onException(InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}'));
+      return onException(
+        InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}',
+        ),
+      );
     }
   }
 }
@@ -153,21 +165,28 @@ abstract class NoParamsResultUsecase<Output, Failure>
   const NoParamsResultUsecase() : super();
 
   /// Call the usecase
+  @override
   Future<Result<Output, Failure>> call() async {
     PreconditionsResult condition;
 
     try {
       condition = await checkPrecondition(null);
     } catch (e) {
-      return onException(PreconditionsException(
-          'An error occured during the preconditions check: $e'));
+      return onException(
+        PreconditionsException(
+          'An error occured during the preconditions check: $e',
+        ),
+      );
     }
 
     if (condition.isValid) {
       return execute();
     } else {
-      return onException(InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}'));
+      return onException(
+        InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}',
+        ),
+      );
     }
   }
 }

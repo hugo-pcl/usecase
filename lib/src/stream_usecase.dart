@@ -41,7 +41,9 @@ abstract class StreamUsecase<Input, Output>
       return PreconditionsResult(isValid: true);
     } else {
       return PreconditionsResult(
-          isValid: false, message: 'Params cannot be null');
+        isValid: false,
+        message: 'Params cannot be null',
+      );
     }
   }
 
@@ -59,14 +61,16 @@ abstract class StreamUsecase<Input, Output>
       condition = await checkPrecondition(params);
     } catch (e) {
       throw PreconditionsException(
-          'An error occured during the preconditions check: $e');
+        'An error occured during the preconditions check: $e',
+      );
     }
 
     if (condition.isValid) {
       yield* execute(params as Input);
     } else {
       throw InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}');
+        'Invalid preconditions: ${condition.message}',
+      );
     }
   }
 }
@@ -86,9 +90,8 @@ abstract class NoParamsStreamUsecase<Output>
   ///
   /// Override this method to change the behavior.
   @override
-  FutureOr<PreconditionsResult> checkPrecondition(void params) {
-    return Future.value(PreconditionsResult(isValid: true));
-  }
+  FutureOr<PreconditionsResult> checkPrecondition(void params) =>
+      Future.value(PreconditionsResult(isValid: true));
 
   /// Execute the usecase with the given params
   ///
@@ -104,14 +107,16 @@ abstract class NoParamsStreamUsecase<Output>
       condition = await checkPrecondition(null);
     } catch (e) {
       throw PreconditionsException(
-          'An error occured during the preconditions check: $e');
+        'An error occured during the preconditions check: $e',
+      );
     }
 
     if (condition.isValid) {
       yield* execute();
     } else {
       throw InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}');
+        'Invalid preconditions: ${condition.message}',
+      );
     }
   }
 }
@@ -127,14 +132,18 @@ abstract class ResultStreamUsecase<Input, Output, Failure>
   const ResultStreamUsecase() : super();
 
   /// Call the usecase with the given params
+  @override
   Stream<Result<Output, Failure>> call(Input? params) async* {
     PreconditionsResult condition;
 
     try {
       condition = await checkPrecondition(params);
     } catch (e) {
-      yield onException(PreconditionsException(
-          'An error occured during the preconditions check: $e'));
+      yield onException(
+        PreconditionsException(
+          'An error occured during the preconditions check: $e',
+        ),
+      );
 
       return;
     }
@@ -142,8 +151,11 @@ abstract class ResultStreamUsecase<Input, Output, Failure>
     if (condition.isValid) {
       yield* execute(params as Input);
     } else {
-      yield onException(InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}'));
+      yield onException(
+        InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}',
+        ),
+      );
 
       return;
     }
@@ -161,14 +173,18 @@ abstract class NoParamsResultStreamUsecase<Output, Failure>
   const NoParamsResultStreamUsecase() : super();
 
   /// Call the usecase
+  @override
   Stream<Result<Output, Failure>> call() async* {
     PreconditionsResult condition;
 
     try {
       condition = await checkPrecondition(null);
     } catch (e) {
-      yield onException(PreconditionsException(
-          'An error occured during the preconditions check: $e'));
+      yield onException(
+        PreconditionsException(
+          'An error occured during the preconditions check: $e',
+        ),
+      );
 
       return;
     }
@@ -176,8 +192,11 @@ abstract class NoParamsResultStreamUsecase<Output, Failure>
     if (condition.isValid) {
       yield* execute();
     } else {
-      yield onException(InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}'));
+      yield onException(
+        InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}',
+        ),
+      );
 
       return;
     }
