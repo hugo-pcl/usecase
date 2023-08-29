@@ -5,7 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 import 'package:test/test.dart';
-import 'package:usecase/usecase.dart';
+import 'package:generic_usecase/generic_usecase.dart';
 
 void main() {
   group('UsecaseException', () {
@@ -131,8 +131,10 @@ void main() {
     test('should have a string representation', () {
       const message = 'Test message';
       const exception = InvalidPreconditionsException(message);
-      expect(exception.toString(),
-          equals('InvalidPreconditionsException: $message'),);
+      expect(
+        exception.toString(),
+        equals('InvalidPreconditionsException: $message'),
+      );
     });
 
     test('should be equal to another exception with the same message', () {

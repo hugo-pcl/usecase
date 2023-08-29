@@ -9,7 +9,7 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  usecase:
+  generic_usecase:
     path: "../"
   sealed_result: ^3.0.0
 

@@ -6,11 +6,11 @@
 
 import 'dart:async';
 
+import 'package:generic_usecase/src/preconditions_result.dart';
+import 'package:generic_usecase/src/result_usecase_mixin.dart';
+import 'package:generic_usecase/src/usecase_exception.dart';
 import 'package:meta/meta.dart';
 import 'package:sealed_result/sealed_result.dart';
-import 'package:usecase/src/preconditions_result.dart';
-import 'package:usecase/src/result_usecase_mixin.dart';
-import 'package:usecase/src/usecase_exception.dart';
 
 abstract class _StreamUsecase<Input, Output> {
   const _StreamUsecase._();

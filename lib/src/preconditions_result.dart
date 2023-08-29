@@ -5,8 +5,10 @@
 // https://opensource.org/licenses/MIT.
 
 class PreconditionsResult {
-  PreconditionsResult(
-      {required this.isValid, this.message = 'Requirements are not met',});
+  PreconditionsResult({
+    required this.isValid,
+    this.message = 'Requirements are not met',
+  });
 
   final bool isValid;
   final String message;

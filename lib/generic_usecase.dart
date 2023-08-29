@@ -5,7 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 /// Small component that encapsulates an application's scenario logic.
-library usecase;
+library generic_usecase;
 
 export 'src/preconditions_result.dart';
 export 'src/result_usecase_mixin.dart';

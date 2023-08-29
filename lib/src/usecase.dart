@@ -6,9 +6,9 @@
 
 import 'dart:async';
 
+import 'package:generic_usecase/generic_usecase.dart';
 import 'package:meta/meta.dart';
 import 'package:sealed_result/sealed_result.dart';
-import 'package:usecase/usecase.dart';
 
 abstract class _Usecase<Input, Output> {
   const _Usecase._();

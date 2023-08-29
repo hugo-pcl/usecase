@@ -8,7 +8,7 @@ import 'dart:async';
 
 import 'package:example/failure.dart';
 import 'package:sealed_result/sealed_result.dart';
-import 'package:usecase/usecase.dart';
+import 'package:generic_usecase/generic_usecase.dart';
 
 class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();

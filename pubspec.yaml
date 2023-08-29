@@ -1,4 +1,4 @@
-name: usecase
+name: generic_usecase
 description: Small component that encapsulates an application's scenario logic.
 repository: https://github.com/hugo-pcl/usecase
 version: 1.2.0
