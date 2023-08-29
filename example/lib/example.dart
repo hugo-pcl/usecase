@@ -60,3 +60,17 @@ class ListenerUsecase extends NoParamsResultStreamUsecase<String, Failure> {
   Result<String, Failure> onException(UsecaseException e) =>
       Result.failure(Failure(e.message ?? ''));
 }
+
+class UnsafeGeneratorUsecase extends StreamUsecase<int, int> {
+  const UnsafeGeneratorUsecase();
+
+  @override
+  Stream<int> execute(int params) async* {
+    for (int i = 0; i < params; i++) {
+      if (i == 5) {
+        throw Exception('Cannot be 5');
+      }
+      yield i;
+    }
+  }
+}

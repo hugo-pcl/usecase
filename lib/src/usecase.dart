@@ -4,6 +4,8 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 import 'package:sealed_result/sealed_result.dart';
 import 'package:usecase/usecase.dart';
@@ -14,7 +16,7 @@ abstract class _Usecase<Input, Output> {
   /// {@template check_precondition}
   /// Check if the usecase can be executed with the given params
   /// {@endtemplate}
-  Future<PreconditionsResult> checkPrecondition(Input? params);
+  FutureOr<PreconditionsResult> checkPrecondition(Input? params);
 }
 
 /// {@template usecase}
@@ -31,12 +33,12 @@ abstract class Usecase<Input, Output> extends _Usecase<Input, Output> {
   ///
   /// Override this method to change the behavior.
   @override
-  Future<PreconditionsResult> checkPrecondition(Input? params) {
+  FutureOr<PreconditionsResult> checkPrecondition(Input? params) async {
     if (params != null) {
-      return Future.value(PreconditionsResult(isValid: true));
+      return PreconditionsResult(isValid: true);
     } else {
-      return Future.value(PreconditionsResult(
-          isValid: false, message: 'Params cannot be null'));
+      return PreconditionsResult(
+          isValid: false, message: 'Params cannot be null');
     }
   }
 
@@ -47,18 +49,23 @@ abstract class Usecase<Input, Output> extends _Usecase<Input, Output> {
   Future<Output> execute(Input params);
 
   /// Call the usecase with the given params
-  Future<Output> call(Input? params) => checkPrecondition(params).then(
-        (condition) {
-          if (condition.isValid) {
-            return execute(params as Input);
-          } else {
-            throw InvalidPreconditionsException(
-                'Invalid preconditions: ${condition.message}');
-          }
-        },
-        onError: (dynamic e) => throw PreconditionsException(
-            'An error occured during the preconditions check: $e'),
-      );
+  Future<Output> call(Input? params) async {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(params);
+    } catch (e) {
+      throw PreconditionsException(
+          'An error occured during the preconditions check: $e');
+    }
+
+    if (condition.isValid) {
+      return execute(params as Input);
+    } else {
+      throw InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}');
+    }
+  }
 }
 
 /// {@template no_params_usecase}
@@ -75,7 +82,7 @@ abstract class NoParamsUsecase<Output> extends _Usecase<void, Output> {
   ///
   /// Override this method to change the behavior.
   @override
-  Future<PreconditionsResult> checkPrecondition(void params) {
+  FutureOr<PreconditionsResult> checkPrecondition(void params) {
     return Future.value(PreconditionsResult(isValid: true));
   }
 
@@ -86,18 +93,23 @@ abstract class NoParamsUsecase<Output> extends _Usecase<void, Output> {
   Future<Output> execute();
 
   /// Call the usecase
-  Future<Output> call() => checkPrecondition(null).then(
-        (condition) {
-          if (condition.isValid) {
-            return execute();
-          } else {
-            throw InvalidPreconditionsException(
-                'Invalid preconditions: ${condition.message}');
-          }
-        },
-        onError: (dynamic e) => throw PreconditionsException(
-            'An error occured during the preconditions check: $e'),
-      );
+  Future<Output> call() async {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(null);
+    } catch (e) {
+      throw PreconditionsException(
+          'An error occured during the preconditions check: $e');
+    }
+
+    if (condition.isValid) {
+      return execute();
+    } else {
+      throw InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}');
+    }
+  }
 }
 
 /// {@template result_usecase}
@@ -111,19 +123,23 @@ abstract class ResultUsecase<Input, Output, Failure>
   const ResultUsecase() : super();
 
   /// Call the usecase with the given params
-  Future<Result<Output, Failure>> call(Input? params) =>
-      checkPrecondition(params).then(
-        (condition) {
-          if (condition.isValid) {
-            return execute(params!);
-          } else {
-            return onException(InvalidPreconditionsException(
-                'Invalid preconditions: ${condition.message}'));
-          }
-        },
-        onError: (dynamic e) => onException(PreconditionsException(
-            'An error occured during the preconditions check: $e')),
-      );
+  Future<Result<Output, Failure>> call(Input? params) async {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(params);
+    } catch (e) {
+      return onException(PreconditionsException(
+          'An error occured during the preconditions check: $e'));
+    }
+
+    if (condition.isValid) {
+      return execute(params as Input);
+    } else {
+      return onException(InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}'));
+    }
+  }
 }
 
 /// {@template no_params_result_usecase}
@@ -137,16 +153,21 @@ abstract class NoParamsResultUsecase<Output, Failure>
   const NoParamsResultUsecase() : super();
 
   /// Call the usecase
-  Future<Result<Output, Failure>> call() => checkPrecondition(null).then(
-        (condition) {
-          if (condition.isValid) {
-            return execute();
-          } else {
-            return onException(InvalidPreconditionsException(
-                'Invalid preconditions: ${condition.message}'));
-          }
-        },
-        onError: (dynamic e) => onException(PreconditionsException(
-            'An error occured during the preconditions check: $e')),
-      );
+  Future<Result<Output, Failure>> call() async {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(null);
+    } catch (e) {
+      return onException(PreconditionsException(
+          'An error occured during the preconditions check: $e'));
+    }
+
+    if (condition.isValid) {
+      return execute();
+    } else {
+      return onException(InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}'));
+    }
+  }
 }

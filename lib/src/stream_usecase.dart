@@ -4,8 +4,11 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 import 'package:sealed_result/sealed_result.dart';
+import 'package:usecase/src/preconditions_result.dart';
 import 'package:usecase/src/result_usecase_mixin.dart';
 import 'package:usecase/src/usecase_exception.dart';
 
@@ -15,7 +18,7 @@ abstract class _StreamUsecase<Input, Output> {
   /// {@template check_precondition}
   /// Check if the usecase can be executed with the given params
   /// {@endtemplate}
-  Future<bool> checkPrecondition(Input? params) async => true;
+  FutureOr<PreconditionsResult> checkPrecondition(Input? params);
 }
 
 /// {@template stream_usecase}
@@ -33,7 +36,14 @@ abstract class StreamUsecase<Input, Output>
   ///
   /// Override this method to change the behavior.
   @override
-  Future<bool> checkPrecondition(Input? params) async => true;
+  FutureOr<PreconditionsResult> checkPrecondition(Input? params) async {
+    if (params != null) {
+      return PreconditionsResult(isValid: true);
+    } else {
+      return PreconditionsResult(
+          isValid: false, message: 'Params cannot be null');
+    }
+  }
 
   /// Execute the usecase with the given params
   ///
@@ -43,10 +53,20 @@ abstract class StreamUsecase<Input, Output>
 
   /// Call the usecase with the given params
   Stream<Output> call(Input? params) async* {
-    if (await checkPrecondition(params)) {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(params);
+    } catch (e) {
+      throw PreconditionsException(
+          'An error occured during the preconditions check: $e');
+    }
+
+    if (condition.isValid) {
       yield* execute(params as Input);
     } else {
-      throw StreamUsecaseException('Invalid preconditions');
+      throw InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}');
     }
   }
 }
@@ -66,7 +86,9 @@ abstract class NoParamsStreamUsecase<Output>
   ///
   /// Override this method to change the behavior.
   @override
-  Future<bool> checkPrecondition(void params) async => true;
+  FutureOr<PreconditionsResult> checkPrecondition(void params) {
+    return Future.value(PreconditionsResult(isValid: true));
+  }
 
   /// Execute the usecase with the given params
   ///
@@ -76,10 +98,20 @@ abstract class NoParamsStreamUsecase<Output>
 
   /// Call the usecase
   Stream<Output> call() async* {
-    if (await checkPrecondition(null)) {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(null);
+    } catch (e) {
+      throw PreconditionsException(
+          'An error occured during the preconditions check: $e');
+    }
+
+    if (condition.isValid) {
       yield* execute();
     } else {
-      throw StreamUsecaseException('Invalid preconditions');
+      throw InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}');
     }
   }
 }
@@ -96,10 +128,24 @@ abstract class ResultStreamUsecase<Input, Output, Failure>
 
   /// Call the usecase with the given params
   Stream<Result<Output, Failure>> call(Input? params) async* {
-    if (await checkPrecondition(params)) {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(params);
+    } catch (e) {
+      yield onException(PreconditionsException(
+          'An error occured during the preconditions check: $e'));
+
+      return;
+    }
+
+    if (condition.isValid) {
       yield* execute(params as Input);
     } else {
-      yield onException(StreamUsecaseException('Invalid preconditions'));
+      yield onException(InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}'));
+
+      return;
     }
   }
 }
@@ -116,10 +162,24 @@ abstract class NoParamsResultStreamUsecase<Output, Failure>
 
   /// Call the usecase
   Stream<Result<Output, Failure>> call() async* {
-    if (await checkPrecondition(null)) {
+    PreconditionsResult condition;
+
+    try {
+      condition = await checkPrecondition(null);
+    } catch (e) {
+      yield onException(PreconditionsException(
+          'An error occured during the preconditions check: $e'));
+
+      return;
+    }
+
+    if (condition.isValid) {
       yield* execute();
     } else {
-      yield onException(StreamUsecaseException('Invalid preconditions'));
+      yield onException(InvalidPreconditionsException(
+          'Invalid preconditions: ${condition.message}'));
+
+      return;
     }
   }
 }

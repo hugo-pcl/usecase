@@ -29,4 +29,13 @@ void main(List<String> arguments) {
   listener().listen((event) {
     print(event);
   });
+
+  final UnsafeGeneratorUsecase unsafeGenerator = UnsafeGeneratorUsecase();
+
+  unsafeGenerator(null).listen((event) {
+    print(event);
+  });
+  unsafeGenerator(3).listen((event) {
+    print(event);
+  });
 }
