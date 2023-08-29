@@ -51,9 +51,9 @@ alias bs := bootstrap
   echo "{{green}}{{success}} Done! {{reset}}"
 
 # Run tests with coverage
-@coverage:
+@coverage *args:
   echo "{{yellow}}{{wait}} Testing (with coverage)... {{reset}}"
-  dart run test --coverage=./coverage
+  dart run test --coverage=./coverage {{args}}
   dart pub global activate coverage
   dart pub global run coverage:format_coverage --packages=.dart_tool/package_config.json --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
   genhtml -o ./coverage/report ./coverage/lcov.info
@@ -61,11 +61,11 @@ alias bs := bootstrap
   echo "{{green}}{{success}} Done! {{reset}}"
 
 # Run tests
-@test:
+@test *args:
   echo "{{yellow}}{{wait}} Testing... {{reset}}"
-  dart run test
+  dart run test {{args}}
   echo "{{green}}{{success}} Done! {{reset}}"
 
 # Run example
-@example:
-  dart example/bin/example.dart
+@example *args:
+  dart example/bin/example.dart {{args}}

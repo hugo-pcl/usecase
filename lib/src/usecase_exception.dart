@@ -21,8 +21,11 @@ class UsecaseException implements Exception {
   /// The message of the exception.
   final String? message;
 
+  @mustBeOverridden
+  String get prefix => 'UsecaseException';
+
   @override
-  String toString() => 'UsecaseException${message != null ? ': $message' : ''}';
+  String toString() => '$prefix${message != null ? ': $message' : ''}';
 
   @override
   bool operator ==(Object other) =>
@@ -42,6 +45,9 @@ class UsecaseException implements Exception {
 class InvalidPreconditionsException extends UsecaseException {
   /// {@macro invalid_preconditions_exception}
   const InvalidPreconditionsException([String? message]) : super(message);
+  
+  @override
+  String get prefix => 'InvalidPreconditionsException';
 }
 
 /// {@template preconditions_exception}
@@ -51,6 +57,9 @@ class InvalidPreconditionsException extends UsecaseException {
 class PreconditionsException extends UsecaseException {
   /// {@macro preconditions_exception}
   const PreconditionsException([String? message]) : super(message);
+  
+  @override
+  String get prefix => 'PreconditionsException';
 }
 
 /// {@template stream_usecase_exception}
@@ -59,4 +68,7 @@ class PreconditionsException extends UsecaseException {
 class StreamUsecaseException extends UsecaseException {
   /// {@macro stream_usecase_exception}
   const StreamUsecaseException([String? message]) : super(message);
+  
+  @override
+  String get prefix => 'StreamUsecaseException';
 }
