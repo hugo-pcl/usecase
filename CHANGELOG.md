@@ -11,6 +11,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`generic_usecase` - `v2.0.1`](#generic_usecase---v201)
+
+---
+
+#### `generic_usecase` - `v2.0.1`
+
+## 2.0.1
+
+
+## 2023-10-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - [`generic_usecase` - `v2.0.0`](#generic_usecase---v200)
 
 Packages with other changes:
