@@ -7,7 +7,7 @@ environment:
   sdk: ^3.1.0
 
 dependencies:
-  meta: ^1.11.0
+  meta: ^1.9.1
   sealed_result: ^3.0.0
 
 dev_dependencies:
