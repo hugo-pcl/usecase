@@ -8,40 +8,33 @@ import 'dart:async';
 
 import 'package:generic_usecase/generic_usecase.dart';
 import 'package:meta/meta.dart';
-import 'package:sealed_result/sealed_result.dart';
 
-abstract class _Usecase<Input, Output> {
+/// Base class for all usecases.
+///
+/// This carries the mixins that are used by all usecases.
+abstract class _Usecase<Input, Output>
+    with ConditionsObserver<Input, Output>, ExceptionObserver<Output> {
   const _Usecase._();
-
-  /// {@template check_precondition}
-  /// Check if the usecase can be executed with the given params
-  /// {@endtemplate}
-  FutureOr<PreconditionsResult> checkPrecondition(Input? params);
 }
 
 /// {@template usecase}
 /// A usecase that requires params of type [Input] and returns a result of type
 /// [Output].
 /// {@endtemplate}
-abstract class Usecase<Input, Output> extends _Usecase<Input, Output> {
+abstract class Usecase<Input, Output> extends _Usecase<Input, Output>
+    with UsecaseExecutor<Input, Output> {
   /// {@macro usecase}
   const Usecase() : super._();
 
-  /// {@macro check_precondition}
+  /// This method is called before the execution of the usecase.
   ///
-  /// By default, it returns true if params is not null.
-  ///
-  /// Override this method to change the behavior.
+  /// By default, it returns true if the input is not null.
   @override
-  FutureOr<PreconditionsResult> checkPrecondition(Input? params) async {
-    if (params != null) {
-      return PreconditionsResult(isValid: true);
-    } else {
-      return PreconditionsResult(
-        isValid: false,
-        message: 'Params cannot be null',
-      );
+  FutureOr<ConditionsResult> checkPreconditions(Input? params) {
+    if (params == null) {
+      return ConditionsResult(isValid: false, message: 'Params is null');
     }
+    return super.checkPreconditions(params);
   }
 
   /// Execute the usecase with the given params
@@ -51,43 +44,21 @@ abstract class Usecase<Input, Output> extends _Usecase<Input, Output> {
   Future<Output> execute(Input params);
 
   /// Call the usecase with the given params
-  Future<Output> call(Input? params) async {
-    PreconditionsResult condition;
-
-    try {
-      condition = await checkPrecondition(params);
-    } catch (e) {
-      throw PreconditionsException(
-        'An error occured during the preconditions check: $e',
+  Future<Output> call(Input? params) async => executeWithConditions(
+        params,
+        executor: () async => execute(params as Input),
+        onException: onException,
       );
-    }
-
-    if (condition.isValid) {
-      return execute(params as Input);
-    } else {
-      throw InvalidPreconditionsException(
-        'Invalid preconditions: ${condition.message}',
-      );
-    }
-  }
 }
 
 /// {@template no_params_usecase}
 /// A usecase that does not require any params, but returns a result of type
 /// [Output].
 /// {@endtemplate}
-abstract class NoParamsUsecase<Output> extends _Usecase<void, Output> {
+abstract class NoParamsUsecase<Output> extends _Usecase<void, Output>
+    with UsecaseExecutor<void, Output> {
   /// {@macro no_params_usecase}
   const NoParamsUsecase() : super._();
-
-  /// {@macro check_precondition}
-  ///
-  /// By default, it returns true.
-  ///
-  /// Override this method to change the behavior.
-  @override
-  FutureOr<PreconditionsResult> checkPrecondition(void params) =>
-      Future.value(PreconditionsResult(isValid: true));
 
   /// Execute the usecase with the given params
   ///
@@ -96,97 +67,70 @@ abstract class NoParamsUsecase<Output> extends _Usecase<void, Output> {
   Future<Output> execute();
 
   /// Call the usecase
-  Future<Output> call() async {
-    PreconditionsResult condition;
-
-    try {
-      condition = await checkPrecondition(null);
-    } catch (e) {
-      throw PreconditionsException(
-        'An error occured during the preconditions check: $e',
+  Future<Output> call() async => executeWithConditions(
+        null,
+        executor: execute,
+        onException: onException,
       );
-    }
-
-    if (condition.isValid) {
-      return execute();
-    } else {
-      throw InvalidPreconditionsException(
-        'Invalid preconditions: ${condition.message}',
-      );
-    }
-  }
 }
 
-/// {@template result_usecase}
-/// A usecase that requires params of type [Input] and returns a result of type
-/// [Output] or an error of type [Failure].
+/// {@template stream_usecase}
+/// A stream usecase that requires params of type [Input] and returns a
+/// stream of [Output].
 /// {@endtemplate}
-abstract class ResultUsecase<Input, Output, Failure>
-    extends Usecase<Input, Result<Output, Failure>>
-    with ResultUsecaseMixin<Output, Failure> {
-  /// {@macro result_usecase}
-  const ResultUsecase() : super();
+abstract class StreamUsecase<Input, Output> extends _Usecase<Input, Output>
+    with UsecaseStreamExecutor<Input, Output> {
+  /// {@macro stream_usecase}
+  const StreamUsecase() : super._();
+
+  /// This method is called before the execution of the usecase.
+  ///
+  /// By default, it returns if the input is not null.
+  @override
+  FutureOr<ConditionsResult> checkPreconditions(Input? params) {
+    if (params == null) {
+      return ConditionsResult(isValid: false, message: 'Params is null');
+    }
+    return super.checkPreconditions(params);
+  }
+
+  /// Execute the usecase with the given params
+  ///
+  /// Must be implemented by subclasses but should not be called directly.
+  @visibleForOverriding
+  Stream<Output> execute(Input params);
 
   /// Call the usecase with the given params
-  @override
-  Future<Result<Output, Failure>> call(Input? params) async {
-    PreconditionsResult condition;
-
-    try {
-      condition = await checkPrecondition(params);
-    } catch (e) {
-      return onException(
-        PreconditionsException(
-          'An error occured during the preconditions check: $e',
-        ),
-      );
-    }
-
-    if (condition.isValid) {
-      return execute(params as Input);
-    } else {
-      return onException(
-        InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}',
-        ),
-      );
-    }
+  Stream<Output> call(Input? params) async* {
+    yield* executeWithConditions(
+      params,
+      executor: () => execute(params as Input),
+      onException: onException,
+    );
   }
 }
 
-/// {@template no_params_result_usecase}
-/// A usecase that does not require any params, but returns a result of type
-/// [Output] or an error of type [Failure].
+/// {@template no_params_stream_usecase}
+/// A stream usecase that does not require any params, but returns a
+/// stream of [Output].
 /// {@endtemplate}
-abstract class NoParamsResultUsecase<Output, Failure>
-    extends NoParamsUsecase<Result<Output, Failure>>
-    with ResultUsecaseMixin<Output, Failure> {
-  /// {@macro no_params_result_usecase}
-  const NoParamsResultUsecase() : super();
+abstract class NoParamsStreamUsecase<Output> extends _Usecase<void, Output>
+    with UsecaseStreamExecutor<void, Output> {
+  /// {@macro no_params_stream_usecase}
+  const NoParamsStreamUsecase() : super._();
+
+  /// Execute the usecase with the given params
+  ///
+  /// Must be implemented by subclasses but should not be called directly.
+  @visibleForOverriding
+  Stream<Output> execute();
 
   /// Call the usecase
-  @override
-  Future<Result<Output, Failure>> call() async {
-    PreconditionsResult condition;
-
-    try {
-      condition = await checkPrecondition(null);
-    } catch (e) {
-      return onException(
-        PreconditionsException(
-          'An error occured during the preconditions check: $e',
-        ),
-      );
-    }
-
-    if (condition.isValid) {
-      return execute();
-    } else {
-      return onException(
-        InvalidPreconditionsException(
-          'Invalid preconditions: ${condition.message}',
-        ),
-      );
-    }
+  Stream<Output> call() async* {
+    yield* executeWithConditions(
+      null,
+      executor: execute,
+      onException: onException,
+    );
   }
 }

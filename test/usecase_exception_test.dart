@@ -83,39 +83,6 @@ void main() {
     });
   });
 
-  group('PreconditionsException', () {
-    test('should create an exception with a message', () {
-      const message = 'Test message';
-      const exception = PreconditionsException(message);
-      expect(exception.message, equals(message));
-    });
-
-    test('should create an exception without a message', () {
-      const exception = PreconditionsException();
-      expect(exception.message, isNull);
-    });
-
-    test('should have a string representation', () {
-      const message = 'Test message';
-      const exception = PreconditionsException(message);
-      expect(exception.toString(), equals('PreconditionsException: $message'));
-    });
-
-    test('should be equal to another exception with the same message', () {
-      const message = 'Test message';
-      const exception1 = PreconditionsException(message);
-      const exception2 = PreconditionsException(message);
-      expect(exception1, equals(exception2));
-    });
-
-    test('should not be equal to another exception with a different message',
-        () {
-      const exception1 = PreconditionsException('Test message 1');
-      const exception2 = PreconditionsException('Test message 2');
-      expect(exception1, isNot(equals(exception2)));
-    });
-  });
-
   group('InvalidPreconditionsException', () {
     test('should create an exception with a message', () {
       const message = 'Test message';
@@ -148,6 +115,42 @@ void main() {
         () {
       const exception1 = InvalidPreconditionsException('Test message 1');
       const exception2 = InvalidPreconditionsException('Test message 2');
+      expect(exception1, isNot(equals(exception2)));
+    });
+  });
+
+  group('InvalidPostconditionsException', () {
+    test('should create an exception with a message', () {
+      const message = 'Test message';
+      const exception = InvalidPostconditionsException(message);
+      expect(exception.message, equals(message));
+    });
+
+    test('should create an exception without a message', () {
+      const exception = InvalidPostconditionsException();
+      expect(exception.message, isNull);
+    });
+
+    test('should have a string representation', () {
+      const message = 'Test message';
+      const exception = InvalidPostconditionsException(message);
+      expect(
+        exception.toString(),
+        equals('InvalidPostconditionsException: $message'),
+      );
+    });
+
+    test('should be equal to another exception with the same message', () {
+      const message = 'Test message';
+      const exception1 = InvalidPostconditionsException(message);
+      const exception2 = InvalidPostconditionsException(message);
+      expect(exception1, equals(exception2));
+    });
+
+    test('should not be equal to another exception with a different message',
+        () {
+      const exception1 = InvalidPostconditionsException('Test message 1');
+      const exception2 = InvalidPostconditionsException('Test message 2');
       expect(exception1, isNot(equals(exception2)));
     });
   });

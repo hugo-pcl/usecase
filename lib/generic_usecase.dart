@@ -7,8 +7,10 @@
 /// Small component that encapsulates an application's scenario logic.
 library generic_usecase;
 
-export 'src/preconditions_result.dart';
-export 'src/result_usecase_mixin.dart';
-export 'src/stream_usecase.dart';
+export 'src/conditions_observer.dart';
+export 'src/conditions_result.dart';
+export 'src/exception_observer.dart';
+export 'src/result_usecase.dart';
 export 'src/usecase.dart';
 export 'src/usecase_exception.dart';
+export 'src/usecase_executor.dart';

@@ -50,16 +50,16 @@ class InvalidPreconditionsException extends UsecaseException {
   String get prefix => 'InvalidPreconditionsException';
 }
 
-/// {@template preconditions_exception}
-/// [PreconditionsException] is threw when an error occured during the
-/// preconditions check of a Usecase.
+/// {@template invalid_postconditions_exception}
+/// [InvalidPostconditionsException] is threw when the postconditions of a
+/// Usecase are not met.
 /// {@endtemplate}
-class PreconditionsException extends UsecaseException {
-  /// {@macro preconditions_exception}
-  const PreconditionsException([super.message]);
+class InvalidPostconditionsException extends UsecaseException {
+  /// {@macro invalid_postconditions_exception}
+  const InvalidPostconditionsException([super.message]);
 
   @override
-  String get prefix => 'PreconditionsException';
+  String get prefix => 'InvalidPostconditionsException';
 }
 
 /// {@template stream_usecase_exception}
