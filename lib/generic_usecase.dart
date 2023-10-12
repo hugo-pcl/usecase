@@ -10,7 +10,6 @@ library generic_usecase;
 export 'src/conditions_observer.dart';
 export 'src/conditions_result.dart';
 export 'src/exception_observer.dart';
-export 'src/result_usecase.dart';
 export 'src/usecase.dart';
 export 'src/usecase_exception.dart';
 export 'src/usecase_executor.dart';

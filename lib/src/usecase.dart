@@ -41,10 +41,10 @@ abstract class Usecase<Input, Output> extends _Usecase<Input, Output>
   ///
   /// Must be implemented by subclasses but should not be called directly.
   @visibleForOverriding
-  Future<Output> execute(Input params);
+  FutureOr<Output> execute(Input params);
 
   /// Call the usecase with the given params
-  Future<Output> call(Input? params) async => executeWithConditions(
+  FutureOr<Output> call(Input? params) async => executeWithConditions(
         params,
         executor: () async => execute(params as Input),
         onException: onException,
@@ -64,10 +64,10 @@ abstract class NoParamsUsecase<Output> extends _Usecase<void, Output>
   ///
   /// Must be implemented by subclasses but should not be called directly.
   @visibleForOverriding
-  Future<Output> execute();
+  FutureOr<Output> execute();
 
   /// Call the usecase
-  Future<Output> call() async => executeWithConditions(
+  FutureOr<Output> call() async => executeWithConditions(
         null,
         executor: execute,
         onException: onException,

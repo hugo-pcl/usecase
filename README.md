@@ -37,7 +37,6 @@ These class enable you to encapsulate your logic in an atomic elements that you 
 * [x] Simple and easy to use API
 * [x] Fully tested (100% coverage)
 * [x] Fully documented
-* [x] `sealed_result` compatible (see [sealed_result](https://pub.dev/packages/sealed_result))
 
 Available usecase types:
 
@@ -45,12 +44,6 @@ Available usecase types:
 * `NoParamsUsecase<Output>`
 * `StreamUsecase<Input, Output>`
 * `NoParamsStreamUsecase<Output>`
-
-* Result usecase types:
-  + `ResultUsecase<Input, Output, Failure>`
-  + `NoParamsResultUsecase<Output, Failure>`
-  + `ResultStreamUsecase<Input, Output, Failure>`
-  + `NoParamsResultStreamUsecase<Output, Failure>`
 
 ## Usage
 
@@ -63,7 +56,7 @@ class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<int> execute(int params) async => params + params;
+  FutureOr<int> execute(int params) async => params + params;
 }
 ```
 
@@ -127,7 +120,7 @@ class DivisionUsecase extends Usecase<(int, int), double> {
   }
 
   @override
-  Future<double> execute((int, int) params) async => params.$1 / params.$2;
+  FutureOr<double> execute((int, int) params) async => params.$1 / params.$2;
 }
 ```
 
@@ -138,7 +131,7 @@ class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<int> execute(int params) async => params + params;
+  FutureOr<int> execute(int params) async => params + params;
 
   @override
   FutureOr<ConditionsResult> checkPostconditions(int? result) {
@@ -164,7 +157,7 @@ class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<int> execute(int params) async => params + params;
+  FutureOr<int> execute(int params) async => params + params;
 
   @override
   FutureOr<int> onException(Object e) {
@@ -183,7 +176,7 @@ By assembling the previous examples, you can create a usecase that returns a `Re
 > This example uses the [sealed_result](https://pub.dev/packages/sealed_result) package.
 
 ```dart
-class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
+class DivisionResultUsecase extends Usecase<(int, int), Result<double, Failure>> {
   const DivisionResultUsecase();
 
   @override
@@ -200,7 +193,7 @@ class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
   }
 
   @override
-  Future<Result<double, Failure>> execute((int, int) params) async =>
+  FutureOr<Result<double, Failure>> execute((int, int) params) async =>
       Result.success(params.$1 / params.$2);
 
   @override

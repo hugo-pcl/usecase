@@ -7,32 +7,34 @@ import 'dart:async';
 
 import 'package:generic_usecase/generic_usecase.dart';
 
+import 'display.dart';
+
 Future<void> main() async {
   print('AdditionUsecase');
 
   const AdditionUsecase addition = AdditionUsecase();
 
   print('> addition(2)');
-  await addition(2).then(print, onError: print);
+  await display(() => addition(2));
 
   print('> addition(null)');
-  await addition(null).then(print, onError: print);
+  await display(() => addition(null));
 
   print('> addition(-2)');
-  await addition(-2).then(print, onError: print);
+  await display(() => addition(-2));
 
   print('DivisionUsecase');
 
   const DivisionUsecase division = DivisionUsecase();
 
   print('> division(null)');
-  await division(null).then(print, onError: print);
+  await display(() => division(null));
 
   print('> division((2, 0))');
-  await division((2, 0)).then(print, onError: print);
+  await display(() => division((2, 0)));
 
   print('> division((4, 2))');
-  await division((4, 2)).then(print, onError: print);
+  await display(() => division((4, 2)));
 
   print('GeneratorUsecase');
 
@@ -50,7 +52,7 @@ class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<int> execute(int params) async => params + params;
+  FutureOr<int> execute(int params) async => params + params;
 
   @override
   FutureOr<ConditionsResult> checkPostconditions(int? result) {
@@ -83,7 +85,7 @@ class DivisionUsecase extends Usecase<(int, int), double> {
   }
 
   @override
-  Future<double> execute((int, int) params) async => params.$1 / params.$2;
+  FutureOr<double> execute((int, int) params) async => params.$1 / params.$2;
 }
 
 class GeneratorUsecase extends NoParamsStreamUsecase<int> {
@@ -91,7 +93,7 @@ class GeneratorUsecase extends NoParamsStreamUsecase<int> {
 
   @override
   Stream<int> execute() async* {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
       await Future<void>.delayed(const Duration(seconds: 1));
       yield i;
     }

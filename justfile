@@ -69,4 +69,3 @@ alias bs := bootstrap
 # Run example
 @example:
   dart example/generic_usecase_example.dart
-  dart example/generic_usecase_result_example.dart

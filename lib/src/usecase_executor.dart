@@ -15,7 +15,7 @@ mixin UsecaseExecutor<Input, Output> on ConditionsObserver<Input, Output> {
   /// {@endtemplate}
   Future<Output> executeWithConditions(
     Input? params, {
-    required Future<Output> Function() executor,
+    required FutureOr<Output> Function() executor,
     required FutureOr<Output> Function(Object e) onException,
   }) async {
     ConditionsResult condition;
