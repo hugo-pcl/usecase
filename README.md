@@ -43,12 +43,14 @@ Available usecase types:
 
 * `Usecase<Input, Output>`
 * `NoParamsUsecase<Output>`
-* `ResultUsecase<Input, Output, Failure>`
-* `NoParamsResultUsecase<Output, Failure>`
 * `StreamUsecase<Input, Output>`
 * `NoParamsStreamUsecase<Output>`
-* `StreamResultUsecase<Input, Output, Failure>`
-* `NoParamsStreamResultUsecase<Output, Failure>`
+
+* Result usecase types:
+  + `ResultUsecase<Input, Output, Failure>`
+  + `NoParamsResultUsecase<Output, Failure>`
+  + `ResultStreamUsecase<Input, Output, Failure>`
+  + `NoParamsResultStreamUsecase<Output, Failure>`
 
 ## Usage
 
@@ -70,74 +72,12 @@ class AdditionUsecase extends Usecase<int, int> {
 The `execute` method is the one that will be called when you call the `call` method on your usecase.
 
 ```dart
-final usecase = AdditionUsecase();
-final result = await usecase(2);
+final addition = AdditionUsecase();
+final result = await addition(2);
 print(result); // 4
 ```
 
-### Checking preconditions
-
-You can add a precondition check to your usecase, which will be executed before the `execute` method:
-
-```dart
-class DivisionUsecase extends Usecase<(int, int), double> {
-  const DivisionUsecase();
-
-  @override
-  FutureOr<PreconditionsResult> checkPrecondition((int, int)? params) {
-    if (params == null) {
-      return PreconditionsResult(isValid: false, message: 'Params is null');
-    }
-
-    if (params.$2 == 0) {
-      return PreconditionsResult(isValid: false, message: 'Cannot divide by 0');
-    }
-
-    return PreconditionsResult(isValid: true);
-  }
-
-  @override
-  Future<double> execute((int, int) params) async {
-    return params.$1 / params.$2;
-  }
-}
-```
-
-### Using a result
-
-You can use a result (see [sealed_result](https://pub.dev/packages/sealed_result)) usecase to return a `Result` object instead of a raw value:
-
-```dart
-class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
-  const DivisionResultUsecase();
-
-  @override
-  FutureOr<PreconditionsResult> checkPrecondition((int, int)? params) {
-    if (params == null) {
-      return PreconditionsResult(isValid: false, message: 'Params is null');
-    }
-
-    if (params.$2 == 0) {
-      return PreconditionsResult(isValid: false, message: 'Cannot divide by 0');
-    }
-
-    return PreconditionsResult(isValid: true);
-  }
-
-  @override
-  Future<Result<double, Failure>> execute((int, int) params) async {
-    return Result.success(params.$1 / params.$2);
-  }
-
-  @override
-  Result<double, Failure> onException(UsecaseException e) =>
-      Result.failure(Failure(e.message ?? ''));
-}
-```
-
-You need to override the `onException` method to build the `Failure` object from the `UsecaseException` .
-
-### Using a stream
+### Using a stream usecase
 
 You can use a stream usecase to return a `Stream` instead of a raw value:
 
@@ -148,8 +88,140 @@ class GeneratorUsecase extends NoParamsStreamUsecase<int> {
   @override
   Stream<int> execute() async* {
     for (int i = 0; i < 10; i++) {
+      await Future.delayed(const Duration(seconds: 1));
       yield i;
     }
+  }
+}
+```
+
+You can then use it like this:
+
+```dart
+final generator = GeneratorUsecase();
+final stream = generator();
+
+stream.listen((event) {
+  print(event); // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+}, onError: (e) {
+  print(e);
+};
+```
+
+### Checking preconditions and postconditions
+
+You can add a precondition check to your usecase, which will be executed before the `execute` method:
+
+```dart
+class DivisionUsecase extends Usecase<(int, int), double> {
+  const DivisionUsecase();
+
+  @override
+  FutureOr<ConditionsResult> checkPreconditions((int, int)? params) {
+    if (params == null) {
+      return ConditionsResult(isValid: false, message: 'Params is null');
+    }
+
+    if (params.$2 == 0) {
+      return ConditionsResult(isValid: false, message: 'Cannot divide by 0');
+    }
+
+    return ConditionsResult(isValid: true);
+  }
+
+  @override
+  Future<double> execute((int, int) params) async {
+    return params.$1 / params.$2;
+  }
+}
+```
+
+You can also add a postcondition check to your usecase, which will be executed after the `execute` method:
+
+```dart
+class AdditionUsecase extends Usecase<int, int> {
+  const AdditionUsecase();
+
+  @override
+  Future<int> execute(int params) async {
+    return params + params;
+  }
+
+  @override
+  FutureOr<ConditionsResult> checkPostconditions(int? result) {
+    if (result == null) {
+      return ConditionsResult(isValid: false, message: 'Result is null');
+    }
+
+    if (result < 0) {
+      return ConditionsResult(isValid: false, message: 'Result is negative');
+    }
+
+    return ConditionsResult(isValid: true);
+  }
+}
+```
+
+### Catching exceptions
+
+You can catch exceptions thrown by your usecase by overriding the `onException` method:
+
+```dart
+class AdditionUsecase extends Usecase<int, int> {
+  const AdditionUsecase();
+
+  @override
+  Future<int> execute(int params) async {
+    return params + params;
+  }
+
+  @override
+  FutureOr<int> onException(Object e) {
+    print(e);
+    return super.onException(e);
+  }
+}
+```
+
+This method will be called when an exception is thrown by the `execute` method. It will also be called when a precondition or postcondition check fails.
+
+### Using a Result
+
+By assembling the previous examples, you can create a usecase that returns a `Result` object. By catching exceptions and checking preconditions and postconditions, you can return a `Result` object that will be either a `Success` or a `Failure` :
+
+> This example uses the [sealed_result](https://pub.dev/packages/sealed_result) package.
+
+```dart
+class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
+  const DivisionResultUsecase();
+
+  @override
+  FutureOr<ConditionsResult> checkPreconditions((int, int)? params) {
+    if (params == null) {
+      return ConditionsResult(isValid: false, message: 'Params is null');
+    }
+
+    if (params.$2 == 0) {
+      return ConditionsResult(isValid: false, message: 'Cannot divide by 0');
+    }
+
+    return ConditionsResult(isValid: true);
+  }
+
+  @override
+  Future<Result<double, Failure>> execute((int, int) params) async {
+    return Result.success(params.$1 / params.$2);
+  }
+
+  @override
+  FutureOr<Result<double, Failure>> onException(Object e) {
+    if (e case UsecaseException _) {
+      return Result.failure(Failure(e.message ?? ''));
+    }
+    if (e case Exception || Error) {
+      return Result.failure(Failure(e.toString()));
+    }
+    return Result.failure(Failure(''));
   }
 }
 ```

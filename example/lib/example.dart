@@ -5,7 +5,6 @@
 // https://opensource.org/licenses/MIT.
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:example/failure.dart';
 import 'package:generic_usecase/generic_usecase.dart';
@@ -18,6 +17,12 @@ class AdditionUsecase extends Usecase<int, int> {
   @override
   Future<int> execute(int params) async {
     return params + params;
+  }
+
+  @override
+  FutureOr<int> onException(Object e) {
+    print(e);
+    return super.onException(e);
   }
 }
 
@@ -49,6 +54,7 @@ class GeneratorUsecase extends NoParamsStreamUsecase<int> {
   @override
   Stream<int> execute() async* {
     for (int i = 0; i < 10; i++) {
+      await Future.delayed(const Duration(seconds: 1));
       yield i;
     }
   }
