@@ -48,11 +48,11 @@ Packages with breaking changes:
 
 Packages with other changes:
 
- - [`usecase` - `v1.2.0`](#usecase---v120)
+ - [`generic_usecase` - `v1.2.0`](#generic_usecase---v120)
 
 ---
 
-#### `usecase` - `v1.2.0`
+#### `generic_usecase` - `v1.2.0`
 
  - **FEAT**: add analyzer + dart format.
 
@@ -73,11 +73,11 @@ Packages with breaking changes:
 
 Packages with other changes:
 
- - [`usecase` - `v1.1.0`](#usecase---v110)
+ - [`generic_usecase` - `v1.1.0`](#generic_usecase---v110)
 
 ---
 
-#### `usecase` - `v1.1.0`
+#### `generic_usecase` - `v1.1.0`
 
  - **FIX**: precondition throw not always caught.
  - **FEAT**: add async and stream usecases + result support.
@@ -88,7 +88,3 @@ Packages with other changes:
  - **FIX**: precondition throw not always caught.
  - **FEAT**: add async and stream usecases + result support.
  - **DOCS**: update readme + update example [CI SKIP].
-
-## 1.0.0
-
-- Initial version.

@@ -67,5 +67,6 @@ alias bs := bootstrap
   echo "{{green}}{{success}} Done! {{reset}}"
 
 # Run example
-@example *args:
-  dart example/bin/example.dart {{args}}
+@example:
+  dart example/generic_usecase_example.dart
+  dart example/generic_usecase_result_example.dart

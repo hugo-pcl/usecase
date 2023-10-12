@@ -63,9 +63,7 @@ class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<int> execute(int params) async {
-    return params + params;
-  }
+  Future<int> execute(int params) async => params + params;
 }
 ```
 
@@ -73,8 +71,7 @@ The `execute` method is the one that will be called when you call the `call` met
 
 ```dart
 final addition = AdditionUsecase();
-final result = await addition(2);
-print(result); // 4
+await addition(2).then(print, onError: print); // 4
 ```
 
 ### Using a stream usecase
@@ -88,7 +85,7 @@ class GeneratorUsecase extends NoParamsStreamUsecase<int> {
   @override
   Stream<int> execute() async* {
     for (int i = 0; i < 10; i++) {
-      await Future.delayed(const Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(seconds: 1));
       yield i;
     }
   }
@@ -101,11 +98,11 @@ You can then use it like this:
 final generator = GeneratorUsecase();
 final stream = generator();
 
-stream.listen((event) {
-  print(event); // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-}, onError: (e) {
-  print(e);
-};
+stream.listen(
+  print,
+  onError: print,
+  onDone: () => print('Done'),
+);
 ```
 
 ### Checking preconditions and postconditions
@@ -130,9 +127,7 @@ class DivisionUsecase extends Usecase<(int, int), double> {
   }
 
   @override
-  Future<double> execute((int, int) params) async {
-    return params.$1 / params.$2;
-  }
+  Future<double> execute((int, int) params) async => params.$1 / params.$2;
 }
 ```
 
@@ -143,9 +138,7 @@ class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<int> execute(int params) async {
-    return params + params;
-  }
+  Future<int> execute(int params) async => params + params;
 
   @override
   FutureOr<ConditionsResult> checkPostconditions(int? result) {
@@ -171,13 +164,11 @@ class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
 
   @override
-  Future<int> execute(int params) async {
-    return params + params;
-  }
+  Future<int> execute(int params) async => params + params;
 
   @override
   FutureOr<int> onException(Object e) {
-    print(e);
+    print(e); // Prints the exception
     return super.onException(e);
   }
 }
@@ -209,9 +200,8 @@ class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
   }
 
   @override
-  Future<Result<double, Failure>> execute((int, int) params) async {
-    return Result.success(params.$1 / params.$2);
-  }
+  Future<Result<double, Failure>> execute((int, int) params) async =>
+      Result.success(params.$1 / params.$2);
 
   @override
   FutureOr<Result<double, Failure>> onException(Object e) {
