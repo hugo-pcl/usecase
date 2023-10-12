@@ -5,10 +5,12 @@
 // https://opensource.org/licenses/MIT.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:example/failure.dart';
-import 'package:sealed_result/sealed_result.dart';
 import 'package:generic_usecase/generic_usecase.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:sealed_result/sealed_result.dart';
 
 class AdditionUsecase extends Usecase<int, int> {
   const AdditionUsecase();
@@ -23,16 +25,16 @@ class DivisionUsecase extends Usecase<(int, int), double> {
   const DivisionUsecase();
 
   @override
-  FutureOr<PreconditionsResult> checkPrecondition((int, int)? params) {
+  FutureOr<ConditionsResult> checkPreconditions((int, int)? params) {
     if (params == null) {
-      return PreconditionsResult(isValid: false, message: 'Params is null');
+      return ConditionsResult(isValid: false, message: 'Params is null');
     }
 
     if (params.$2 == 0) {
-      return PreconditionsResult(isValid: false, message: 'Cannot divide by 0');
+      return ConditionsResult(isValid: false, message: 'Cannot divide by 0');
     }
 
-    return PreconditionsResult(isValid: true);
+    return ConditionsResult(isValid: true);
   }
 
   @override
@@ -56,16 +58,16 @@ class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
   const DivisionResultUsecase();
 
   @override
-  FutureOr<PreconditionsResult> checkPrecondition((int, int)? params) {
+  FutureOr<ConditionsResult> checkPreconditions((int, int)? params) {
     if (params == null) {
-      return PreconditionsResult(isValid: false, message: 'Params is null');
+      return ConditionsResult(isValid: false, message: 'Params is null');
     }
 
     if (params.$2 == 0) {
-      return PreconditionsResult(isValid: false, message: 'Cannot divide by 0');
+      return ConditionsResult(isValid: false, message: 'Cannot divide by 0');
     }
 
-    return PreconditionsResult(isValid: true);
+    return ConditionsResult(isValid: true);
   }
 
   @override
@@ -74,6 +76,63 @@ class DivisionResultUsecase extends ResultUsecase<(int, int), double, Failure> {
   }
 
   @override
-  Result<double, Failure> onException(UsecaseException e) =>
-      Result.failure(Failure(e.message ?? ''));
+  FutureOr<Result<double, Failure>> onException(Object e) {
+    if (e case UsecaseException _) {
+      return Result.failure(Failure(e.message ?? ''));
+    }
+    if (e case Exception || Error) {
+      return Result.failure(Failure(e.toString()));
+    }
+    return Result.failure(Failure(''));
+  }
+}
+
+class BooleanResultUsecase extends NoParamsResultUsecase<bool, Failure> {
+  const BooleanResultUsecase();
+
+  @override
+  FutureOr<ConditionsResult> checkPostconditions(
+      Result<bool, Failure>? result) {
+    return ConditionsResult(
+      isValid: result?.ok == true,
+      message: 'Result is not true',
+    );
+  }
+
+  @override
+  Future<Result<bool, Failure>> execute() {
+    return Future.delayed(
+      const Duration(seconds: 1),
+      () => Result.success(false),
+    );
+  }
+
+  @override
+  FutureOr<Result<bool, Failure>> onException(Object e) {
+    if (e case UsecaseException _) {
+      return Result.failure(Failure(e.message ?? ''));
+    }
+    if (e case Exception || Error) {
+      return Result.failure(Failure(e.toString()));
+    }
+    return Result.failure(Failure(''));
+  }
+}
+
+class RxDartGeneratorUsecase extends NoParamsStreamUsecase<int> {
+  const RxDartGeneratorUsecase();
+
+  @override
+  Stream<int> execute() async* {
+    final subject = BehaviorSubject<int>.seeded(0);
+
+    subject.addStream(
+      Stream.periodic(
+        const Duration(seconds: 1),
+        (i) => i + 1,
+      ),
+    );
+
+    yield* subject.shareValue();
+  }
 }

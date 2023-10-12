@@ -32,6 +32,12 @@ Future<void> main(List<String> arguments) async {
   await division((4, 2))
       .then((value) => print(value), onError: (e) => print(e));
 
+  print('BooleanResultUsecase');
+  final BooleanResultUsecase boolean = const BooleanResultUsecase();
+
+  print('> boolean()');
+  await boolean().then((value) => print(value), onError: (e) => print(e));
+
   print('DivisionResultUsecase');
 
   final DivisionResultUsecase divisionResult = const DivisionResultUsecase();
@@ -53,7 +59,20 @@ Future<void> main(List<String> arguments) async {
   final GeneratorUsecase generator = const GeneratorUsecase();
 
   print('> generator()');
-  generator().listen((event) {
-    print(event);
-  });
+  generator().listen(
+    (event) {
+      print('>> generator: $event');
+    },
+    onError: (e) => print('>> generator (error): $e'),
+  );
+
+  print('RxDartGeneratorUsecase');
+
+  final RxDartGeneratorUsecase rxDartGenerator = const RxDartGeneratorUsecase();
+
+  print('> rxDartGenerator()');
+
+  rxDartGenerator().listen((event) {
+    print(">> rxDartGenerator: $event");
+  }, onError: (e) => print('>> rxDartGenerator (error): $e'));
 }
