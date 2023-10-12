@@ -1,7 +1,7 @@
 name: generic_usecase
 description: Small component that encapsulates an application's scenario logic.
 repository: https://github.com/hugo-pcl/usecase
-version: 2.0.1
+version: 3.0.0
 
 environment:
   sdk: ^3.1.0

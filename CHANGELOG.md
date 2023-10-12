@@ -11,6 +11,33 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - [`generic_usecase` - `v3.0.0`](#generic_usecase---v300)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+---
+
+#### `generic_usecase` - `v3.0.0`
+
+ - **BREAKING** **FEAT**: simplify api by removing result usecase.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: simplify api by removing result usecase.
+
+
+## 2023-10-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - There are no breaking changes in this release.
 
 Packages with other changes:
