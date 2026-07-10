@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-07-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`generic_usecase` - `v3.1.0`](#generic_usecase---v310)
+
+---
+
+#### `generic_usecase` - `v3.1.0`
+
+ - **FEAT**: add synchronous usecase and related mixins with tests.
+
+## 3.1.0
+
+ - **FEAT**: add synchronous usecase and related mixins with tests.
+
+
 ## 2023-10-12
 
 ### Changes
