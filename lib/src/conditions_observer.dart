@@ -30,3 +30,17 @@ mixin ConditionsObserver<Input, Output> {
   FutureOr<ConditionsResult> checkPostconditions(Output? result) =>
       ConditionsResult(isValid: true);
 }
+
+/// {@template sync_conditions_observer}
+/// A mixin that allows to check preconditions and postconditions
+/// of a synchronous use case.
+/// {@endtemplate}
+mixin SyncConditionsObserver<Input, Output> {
+  /// {@macro check_preconditions}
+  ConditionsResult checkPreconditions(Input? params) =>
+      ConditionsResult(isValid: true);
+
+  /// {@macro check_postconditions}
+  ConditionsResult checkPostconditions(Output? result) =>
+      ConditionsResult(isValid: true);
+}

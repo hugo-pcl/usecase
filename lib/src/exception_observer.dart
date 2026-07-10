@@ -25,3 +25,19 @@ mixin ExceptionObserver<Output> {
     throw Exception(e);
   }
 }
+
+/// {@template sync_exception_observer}
+/// A mixin that allows to handle exceptions synchronously
+/// {@endtemplate}
+mixin SyncExceptionObserver<Output> {
+  /// {@macro on_exception}
+  Output onException(Object e) {
+    if (e case Exception _) {
+      throw e;
+    }
+    if (e case Error _) {
+      throw e;
+    }
+    throw Exception(e);
+  }
+}

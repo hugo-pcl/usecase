@@ -17,6 +17,14 @@ abstract class _Usecase<Input, Output>
   const _Usecase._();
 }
 
+/// Base class for all synchronous usecases.
+///
+/// This carries the mixins that are used by all synchronous usecases.
+abstract class _SyncUsecase<Input, Output>
+    with SyncConditionsObserver<Input, Output>, SyncExceptionObserver<Output> {
+  const _SyncUsecase._();
+}
+
 /// {@template usecase}
 /// A usecase that requires params of type [Input] and returns a result of type
 /// [Output].
@@ -68,6 +76,63 @@ abstract class NoParamsUsecase<Output> extends _Usecase<void, Output>
 
   /// Call the usecase
   FutureOr<Output> call() async => executeWithConditions(
+        null,
+        executor: execute,
+        onException: onException,
+      );
+}
+
+/// {@template sync_usecase}
+/// A usecase that requires params of type [Input] and returns a result of
+/// type [Output] synchronously.
+/// {@endtemplate}
+abstract class SyncUsecase<Input, Output> extends _SyncUsecase<Input, Output>
+    with UsecaseSyncExecutor<Input, Output> {
+  /// {@macro sync_usecase}
+  const SyncUsecase() : super._();
+
+  /// Called before the execution of the usecase.
+  ///
+  /// By default, it returns true if the input is not null.
+  @override
+  ConditionsResult checkPreconditions(Input? params) {
+    if (params == null) {
+      return ConditionsResult(isValid: false, message: 'Params are null');
+    }
+    return super.checkPreconditions(params);
+  }
+
+  /// Execute the usecase with the given params
+  ///
+  /// Must be implemented by subclasses but should not be called directly.
+  @visibleForOverriding
+  Output execute(Input params);
+
+  /// Call the usecase with the given params
+  Output call(Input? params) => executeWithConditions(
+        params,
+        executor: () => execute(params as Input),
+        onException: onException,
+      );
+}
+
+/// {@template no_params_sync_usecase}
+/// A usecase that does not require any params, but returns a result of type
+/// [Output] synchronously.
+/// {@endtemplate}
+abstract class NoParamsSyncUsecase<Output> extends _SyncUsecase<void, Output>
+    with UsecaseSyncExecutor<void, Output> {
+  /// {@macro no_params_sync_usecase}
+  const NoParamsSyncUsecase() : super._();
+
+  /// Execute the usecase with the given params
+  ///
+  /// Must be implemented by subclasses but should not be called directly.
+  @visibleForOverriding
+  Output execute();
+
+  /// Call the usecase
+  Output call() => executeWithConditions(
         null,
         executor: execute,
         onException: onException,
