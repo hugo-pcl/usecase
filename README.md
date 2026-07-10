@@ -42,6 +42,8 @@ Available usecase types:
 
 * `Usecase<Input, Output>`
 * `NoParamsUsecase<Output>`
+* `SyncUsecase<Input, Output>`
+* `NoParamsSyncUsecase<Output>`
 * `StreamUsecase<Input, Output>`
 * `NoParamsStreamUsecase<Output>`
 
@@ -65,6 +67,24 @@ The `execute` method is the one that will be called when you call the `call` met
 ```dart
 final addition = AdditionUsecase();
 await addition(2).then(print, onError: print); // 4
+```
+
+### Using a sync usecase
+
+If your logic doesn't need to be asynchronous, you can use a sync usecase to get the `Output` directly, without a `Future`:
+
+```dart
+class SyncAdditionUsecase extends SyncUsecase<int, int> {
+  const SyncAdditionUsecase();
+
+  @override
+  int execute(int params) => params + params;
+}
+```
+
+```dart
+final addition = SyncAdditionUsecase();
+print(addition(2)); // 4
 ```
 
 ### Using a stream usecase

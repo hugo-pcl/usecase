@@ -58,6 +58,54 @@ mixin UsecaseExecutor<Input, Output> on ConditionsObserver<Input, Output> {
   }
 }
 
+mixin UsecaseSyncExecutor<Input, Output>
+    on SyncConditionsObserver<Input, Output> {
+  /// {@macro execute_with_conditions}
+  Output executeWithConditions(
+    Input? params, {
+    required Output Function() executor,
+    required Output Function(Object e) onException,
+  }) {
+    ConditionsResult condition;
+
+    try {
+      condition = checkPreconditions(params);
+    } catch (e) {
+      return onException(e);
+    }
+
+    try {
+      if (condition.isValid) {
+        final result = executor();
+
+        try {
+          condition = checkPostconditions(result);
+        } catch (e) {
+          return onException(e);
+        }
+
+        if (condition.isValid) {
+          return result;
+        } else {
+          return onException(
+            InvalidPostconditionsException(
+              'Invalid postconditions: ${condition.message}',
+            ),
+          );
+        }
+      } else {
+        return onException(
+          InvalidPreconditionsException(
+            'Invalid preconditions: ${condition.message}',
+          ),
+        );
+      }
+    } catch (e) {
+      return onException(e);
+    }
+  }
+}
+
 mixin UsecaseStreamExecutor<Input, Output>
     on ConditionsObserver<Input, Output> {
   /// {@macro execute_with_conditions}
